@@ -41,11 +41,11 @@ python3 project.py
 | Twilight | Stephenie Meyer | 2005 |
 
 ## 🧠 How It Works
-
-1. Sends a GET request to `https://openlibrary.org/search.json`
-2. Retrieves 50 books (query: `olympics`)
-3. Filters books with `first_publish_year > 2000`
-4. Saves filtered data to CSV using `csv.DictWriter`
+- Sends a GET request to `https://openlibrary.org/search.json`
+- Retrieves 50 books (query: `olympics`)
+- Filters books with `first_publish_year > 2000`
+- **Automatically creates `books_after_2000.csv` file and saves the filtered data**
+- Uses `csv.DictWriter` to write data in CSV format
 
 ## 📁 Project Structure
 
