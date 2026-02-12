@@ -16,8 +16,8 @@ for book in books:
     year = book.get('first_publish_year')
     if year and year > 2000:
         filtered_books.append({ 
-            'title': book.get('title', 'نامشخص'),
-            'author': book.get('author_name', ['نامشخص'])[0] if book.get('author_name') else 'نامشخص',
+            'title': book.get('title', 'unknown'),
+            'author': book.get('author_name', ['unknown'])[0] if book.get('author_name') else 'unknown',
             'year': year
         })
 with open ('books_after_2000.csv' , 'w' , newline='', encoding='utf-8') as f :
