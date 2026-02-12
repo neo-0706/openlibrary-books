@@ -11,12 +11,17 @@ url = 'https://openlibrary.org/search.json'
 response = requests.get( url ,params=params , timeout=30)
 data = response.json()
 books = data['docs']
-filtered_books= {}
+filtered_books= []
 for book in books:
-    if book['first_publish_year'] > 2000:
-        filtered_books['title'] = book['']
-        filtered_books['year'] = book['first_publish_year']
+    year = book.get('first_publish_year')
+    if year and year > 2000:
+        filtered_books.append({ 
+            'title': book.get('title', 'نامشخص'),
+            'author': book.get('author_name', ['نامشخص'])[0] if book.get('author_name') else 'نامشخص',
+            'year': year
+        })
     
-with open ()
-# for book in data:
-#     print(book['reading_log_entries']['work']['first_publish_year'])
+with open ('books_after_2000.csv' , 'w' , newline='', encoding='utf-8') as f :
+    writer = csv.DictWriter(f , fieldnames=['title' , 'author' , 'year'])
+    writer.writeheader()
+    writer.writerows(filtered_books)
