@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>جستجوی کتاب</title>
+    <style>
+        body { font-family: Tahoma, sans-serif; background-color: #f4f4f9; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        input { width: 70%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #218838; }
+        #results { margin-top: 20px; }
+        .book-item { border-bottom: 1px solid #eee; padding: 10px 0; }
+        .book-title { font-weight: bold; color: #333; }
+        .book-info { font-size: 0.9em; color: #666; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🔎 جستجوی کتاب در Open Library</h2>
+    <input type="text" id="bookInput" placeholder="نام کتاب یا موضوع را بنویسید...">
+    <button onclick="searchBooks()">جستجو</button>
+
+    <div id="results"></div>
+</div>
+
+<script>
+    async function searchBooks() {
+        const query = document.getElementById('bookInput').value;
+        const resultsDiv = document.getElementById('results');
+        
+        if (!query) {
+            alert("لطفاً چیزی تایپ کنید!");
+            return;
+        }
+
+        resultsDiv.innerHTML = "در حال جستجو...";
+
+        try {
+            // دقیقا همان کاری که requests.get در پایتون انجام می‌داد
+            const response = await fetch(`https://openlibrary.org/search.json?q=${query}&limit=10`);
+            
+            if (!response.ok) throw new Error("خطا در برقراری ارتباط");
+
+            const data = await response.json();
+            displayResults(data.docs);
+        } catch (error) {
+            resultsDiv.innerHTML = "خطایی رخ داد: " + error.message;
+        }
+    }
+
+    function displayResults(books) {
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = ""; // پاک کردن پیام قبلی
+
+        if (books.length === 0) {
+            resultsDiv.innerHTML = "کتابی پیدا نشد.";
+            return;
+        }
+
+        books.forEach(book => {
+            const div = document.createElement('div');
+            div.className = 'book-item';
+            div.innerHTML = `
+                <div class="book-title">${book.title}</div>
+                <div class="book-info">
+                    نویسنده: ${book.author_name ? book.author_name[0] : 'نامشخص'} | 
+                    سال انتشار: ${book.first_publish_year || 'نامشخص'}
+                </div>
+            `;
+            resultsDiv.appendChild(div);
+        });
+    }
+</script>
+
+</body>
+</html>
